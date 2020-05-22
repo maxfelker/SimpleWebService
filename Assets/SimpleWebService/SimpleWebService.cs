@@ -13,7 +13,6 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
-using System.Linq;
 
 public class SimpleWebService : MonoBehaviour
 {
