@@ -4,16 +4,17 @@ SimpleWebSevice
 A simple HTTP tool for Unity3D that interacts with JSON APIs via [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html). Built with [SimpleJSON](https://github.com/Bunny83/SimpleJSON) and formally known as _WebServicesforUnity3d_. This tool is free to use, modify and distribute as needed.
 
 ## Get Started - Add Into Your Project
-First step is to add the SimpleWebService into your project. 
-
-To clone it, browse to the _Assets_ folder of your Unity Project and use `git clone`:
+Download the Unity project by using `git clone`:
 
 ```bash
-cd /path/to/unity/project/Assets/
-git clone git@github.com:mw-felker/SimpleWebService.git
+git clone git@github.com:mw-felker/SimpleWebService.git 
 ```
 
-This will create a `SimpleWebService/` folder in your root _Assets/_ directory which will contain the source code you need.
+This will create a `SimpleWebService/` folder which contains the Unity project. Open Unity 3D and select this folder as a project. Once the project is loaded, browse to:
+
+> Assets/SimpleWebService/Example
+
+Open up the `Example` scene and press play. If everything works correctly, the Unity app should make a HTTP GET request to [a mock JSON Todo API](https://jsonplaceholder.typicode.com/) and when the API responds, it displays the JSON data inthe Unity console.
 
 ### Methods
 When the _SimpleWebService_ class is extended, you have access to the base methods which include:
@@ -78,7 +79,7 @@ The purpose of this tool is to make it easier communicate with web JSON APIs. Af
 ### UnityWebRequest - A building block, not a solution 
 At the base, we have [UnityWebRequest](https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.html) (successor of [WWW](https://docs.unity3d.com/ScriptReference/WWW.html)) which is responsibile for the request and response lifecyle when communicating from Unity 3D to a web accessible property via HTTP. There are some examples on how to make GET and POST requests in the documentation, but to bring it beyond proof-of-concept you will need to manage the request/response. This involves establishing a coroutine per request/response lifecycle as well as setting up and firing a callback method upon coroutine completion.
 
-### JSON Support - It still sucks 
+### JSON Support - Not flexible, still lagging 
 The majority of modern web APIs will respond in the JSON and the need to support JSON inside Unity is continually increasing. JSON Serialization and specifically the [JSONUtility](https://docs.unity3d.com/ScriptReference/JsonUtility.html) requires 1:1 translation of the JSON structure to an object. This is fine if the API response will never change but during iterative development or integrating with an API that is not under your control, this can drastically reduce progress. 
 
 Furthermore, a successful request the `UnityWebRequest.downloadHandler` provides the JSON response as a string which needs to be transformed into useful format that can be accessed by Unity. 
