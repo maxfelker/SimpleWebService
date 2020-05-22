@@ -21,49 +21,80 @@ public class SimpleWebService : MonoBehaviour
   protected delegate void CallBack(JSONNode response);
 
   // Make a GET request inside a Coroutine and pass the callback function upon completion 
-  protected void Get(string URL, CallBack callback) => StartCoroutine(
-    StartRequest(UnityWebRequest.Get(URL), callback)
+  protected void Get(string url, CallBack callback) => StartCoroutine(
+    StartRequest(UnityWebRequest.Get(url), callback)
   );
 
-  // Sent the HTTP request, parse the JSON response and fire the callback 
-  protected IEnumerator StartRequest(UnityWebRequest request, CallBack callback)
+	protected void Post(string url, string json, CallBack callback)
+  {
+    UnityWebRequest request = GenerateUnityWebRequest(url, "POST", json);
+    StartCoroutine(StartRequest(request, callback));
+  }
+	
+	protected void PostForm(string url, Dictionary<string, string> payload, CallBack callback)
+  {
+		WWWForm formData = new WWWForm();
+    foreach (KeyValuePair<String, String> data in payload)
+    {
+      formData.AddField(data.Key, data.Value);
+    }
+    UnityWebRequest request = UnityWebRequest.Post(url, formData);
+    StartCoroutine(StartRequest(request, callback));
+  }
+
+	// Makes a PATCH request 
+	protected void Patch(string url, string json, CallBack callback)
+  {
+    UnityWebRequest request = GenerateUnityWebRequest(url, "PATCH", json);
+    StartCoroutine(StartRequest(request, callback));
+  }
+
+	// Makes a PUT request
+	protected void Put(string url, string json, CallBack callback)
+  {
+    UnityWebRequest request = GenerateUnityWebRequest(url, "PUT", json);
+    StartCoroutine(StartRequest(request, callback));
+  }
+
+	protected void Delete(string url, CallBack callback) => StartCoroutine(
+    StartRequest(UnityWebRequest.Delete(url), callback)
+  );
+
+	// Generates a UnityWebRequest with a configuration HTTP method and sets the request type to JSON
+	private UnityWebRequest GenerateUnityWebRequest(string url, string httpMethod, string json) 
+	{
+		// TODO: Make HTTP method an enum
+		UnityWebRequest request = new UnityWebRequest(url, httpMethod);
+		byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+    request.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+    request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+    request.SetRequestHeader("Content-Type", "application/json");
+    return request;
+	}
+
+  // Makes the HTTP request, parse the JSON response and fire the callback 
+  private IEnumerator StartRequest(UnityWebRequest request, CallBack callback)
   {
     using (request)
     {
 
       yield return request.SendWebRequest();
 
+      // if we have an error, log it
       if (request.isNetworkError || request.isHttpError)
       {
         Debug.LogError(request.error);
       }
-
-      JSONNode responseJSON = JSON.Parse(request.downloadHandler.text);
-
-      if (callback != null)
+      else // parse the JSON response and fire call back 
       {
-        callback(responseJSON);
+
+				JSONNode responseJSON = JSON.Parse(request.downloadHandler.text);
+
+        if (callback != null)
+        {
+          callback(responseJSON);
+        }
       }
-
     }
   }
-
-  // POST to the server
-  protected void Post(string URL, Dictionary<string, string> payload, CallBack callback)
-  {
-
-    // create the new form		
-    WWWForm form = new WWWForm();
-
-    // Add key,value pairs to POST array
-    foreach (KeyValuePair<String, String> data in payload)
-    {
-      form.AddField(data.Key, data.Value);
-    }
-
-    // Post the values to the URL		 
-    StartRequest(UnityWebRequest.Post(URL, form), callback);
-
-  }
-
 }

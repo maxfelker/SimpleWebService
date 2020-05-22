@@ -14,19 +14,16 @@ This will create a `SimpleWebService/` folder which contains the Unity project. 
 
 > Assets/SimpleWebService/Example
 
-Open up the `Example` scene and press play. If everything works correctly, the Unity app should make a HTTP GET request to [a mock JSON Todo API](https://jsonplaceholder.typicode.com/) and when the API responds, it displays the JSON data inthe Unity console.
+Open up the `Example` scene and press play. If everything works correctly, the Unity app should make a HTTP GET request to [a mock JSON User API](https://jsonplaceholder.typicode.com/) and when the API responds, it displays the JSON data inthe Unity console.
 
 ### Methods
 When the _SimpleWebService_ class is extended, you have access to the base methods which include:
 
-- `base.Get(string URL, delegate callback)`
-
-Todos (still porting):
-
-  - POST
-  - PUT
-  - PATCH
-  - DELETE
+- `base.Get(string url, delegate callback)`
+- `base.Post(string url, string json, delegate callback)`
+- `base.Patch(string url, string json, delegate callback)`
+- `base.Put(string url, string json, delegate callback)`
+- `base.Delete(string url, delegate callback)`
 
 ## Extend the SimpleWebService class
 The _SimpleWebService_ class is meant to be a starting point for your own custom web services. Below is an example of the one such extension where we make a GET request to a mock JSON API and retrieve a list of todos. 
@@ -70,7 +67,7 @@ void TodoListSuccess(JSONNode response) {
 }
 ```
 
-From here, we can interacte with the _response_ data. Working with JSONNode is similar to the Javascript bracket notation pattern. You can see examples of this in the [_TodoAPIExample_](https://github.com/mw-felker/SimpleWebService/blob/master/TodoAPIExample.cs) that is included in this project.
+From here, we can interacte with the _response_ data. Working with JSONNode is similar to the Javascript bracket notation pattern. You can see examples of this in the [_User Service Example_](https://github.com/mw-felker/SimpleWebService/blob/master/Assets.SimpleWebService/Example/UserServiceExample.cs) that is included in this project.
 
 
 ## Abstract 
